@@ -95,6 +95,30 @@ const businessDays = ({
       return dayJsObj;
     },
     /**
+     * Subtract business days from a date and returns a new date as a DayJS object. First date is excluded from count by default.
+     *
+     * @param {string | Date | dayjs.Dayjs} inputDate - a date to begin calculation from.
+     * @param {number} days - number of days to add to inputDate
+     * @param {bool} [options.excludeInitialDate=true] - whether to exclude the first date when subtracting.
+     * @returns {dayjs}
+     */
+    subtractDays(inputDate: string | Date | dayjs.Dayjs, days: number, { excludeInitialDate = true } = {}) {
+      let counter = 0;
+      let dayJsObj: dayjs.Dayjs = validateDate(inputDate);
+      if (excludeInitialDate) {
+        dayJsObj = dayJsObj.subtract(1, "day");
+      }
+      while (counter < days) {
+        if (this.check(dayJsObj)) {
+          counter++;
+        }
+        if (counter < days) {
+          dayJsObj = dayJsObj.subtract(1, "day");
+        }
+      }
+      return dayJsObj;
+    },
+    /**
      * Returns an object with a tally of the number of business days, weekend days, and public holidays between two dates. First date is excluded from count by default.
      *
      * @param {string | Date | dayjs.Dayjs} dateStart - a date to begin calculation from.
